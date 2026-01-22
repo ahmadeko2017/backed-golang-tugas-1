@@ -23,17 +23,26 @@ func NewProductHandler(service service.ProductService) *ProductHandler {
 // @Tags products
 // @Accept json
 // @Produce json
-// @Param product body entity.Product true "Product Data"
+// @Param product body ProductCreateRequest true "Product Data"
 // @Success 201 {object} entity.Product
 // @Failure 400 {object} map[string]string "Bad Request"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /products [post]
 func (h *ProductHandler) CreateProduct(c *gin.Context) {
-	var product entity.Product
-	if err := c.ShouldBindJSON(&product); err != nil {
+	var req ProductCreateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	product := entity.Product{
+		Name:        req.Name,
+		Description: req.Description,
+		Price:       req.Price,
+		Stock:       req.Stock,
+		CategoryID:  req.CategoryID,
+	}
+
 	if err := h.service.CreateProduct(&product); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -23,16 +23,22 @@ func NewCategoryHandler(service service.CategoryService) *CategoryHandler {
 // @Tags categories
 // @Accept json
 // @Produce json
-// @Param category body entity.Category true "Category Data"
+// @Param category body CategoryCreateRequest true "Category Data"
 // @Success 201 {object} entity.Category
 // @Failure 400 {object} map[string]string "Bad Request"
 // @Router /categories [post]
 func (h *CategoryHandler) CreateCategory(c *gin.Context) {
-	var category entity.Category
-	if err := c.ShouldBindJSON(&category); err != nil {
+	var req CategoryCreateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	category := entity.Category{
+		Name:        req.Name,
+		Description: req.Description,
+	}
+
 	if err := h.service.CreateCategory(&category); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -82,18 +88,24 @@ func (h *CategoryHandler) GetCategoryByID(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int true "Category ID"
-// @Param category body entity.Category true "Category Data"
+// @Param category body CategoryUpdateRequest true "Category Data"
 // @Success 200 {object} entity.Category
 // @Failure 400 {object} map[string]string "Bad Request"
 // @Failure 404 {object} map[string]string "Not Found"
 // @Router /categories/{id} [put]
 func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	var category entity.Category
-	if err := c.ShouldBindJSON(&category); err != nil {
+	var req CategoryUpdateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	category := entity.Category{
+		Name:        req.Name,
+		Description: req.Description,
+	}
+
 	if err := h.service.UpdateCategory(uint(id), &category); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

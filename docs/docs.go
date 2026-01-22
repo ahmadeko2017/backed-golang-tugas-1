@@ -56,7 +56,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.Category"
+                            "$ref": "#/definitions/handler.CategoryCreateRequest"
                         }
                     }
                 ],
@@ -142,7 +142,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.Category"
+                            "$ref": "#/definitions/handler.CategoryUpdateRequest"
                         }
                     }
                 ],
@@ -284,7 +284,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.Product"
+                            "$ref": "#/definitions/handler.ProductCreateRequest"
                         }
                     }
                 ],
@@ -510,6 +510,60 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "handler.CategoryCreateRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.CategoryUpdateRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.ProductCreateRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "name",
+                "price",
+                "stock"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "stock": {
+                    "type": "integer"
                 }
             }
         }

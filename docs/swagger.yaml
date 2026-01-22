@@ -41,6 +41,42 @@ definitions:
     - price
     - stock
     type: object
+  handler.CategoryCreateRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  handler.CategoryUpdateRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  handler.ProductCreateRequest:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    required:
+    - category_id
+    - name
+    - price
+    - stock
+    type: object
 info:
   contact: {}
   title: Category API
@@ -71,7 +107,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/entity.Category'
+          $ref: '#/definitions/handler.CategoryCreateRequest'
       produces:
       - application/json
       responses:
@@ -154,7 +190,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/entity.Category'
+          $ref: '#/definitions/handler.CategoryUpdateRequest'
       produces:
       - application/json
       responses:
@@ -222,7 +258,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/entity.Product'
+          $ref: '#/definitions/handler.ProductCreateRequest'
       produces:
       - application/json
       responses:

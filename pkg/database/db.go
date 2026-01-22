@@ -33,5 +33,10 @@ func Connect() {
 	// Set SEED_DATA=true to enable seeding
 	if os.Getenv("SEED_DATA") == "true" {
 		SeedData()
+		// If SEED_EXIT is true, exit after seeding (useful for build-time seeding)
+		if os.Getenv("SEED_EXIT") == "true" {
+			log.Println("Seeding completed. Exiting as SEED_EXIT is set to true.")
+			os.Exit(0)
+		}
 	}
 }
