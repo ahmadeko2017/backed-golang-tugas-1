@@ -1,0 +1,28 @@
+body {
+    background-color: #008080;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Pixelated MS Sans Serif', Arial;
+}
+.window {
+    width: 400px;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+}
+.window-body {
+    text-align: center;
+    padding: 20px;
+}
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+p {
+    margin-bottom: 20px;
+}
+button {
+    min-width: 150px;
+    cursor: pointer;
+}

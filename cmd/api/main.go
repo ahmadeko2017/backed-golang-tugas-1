@@ -2,6 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
+	"strings"
+	"time"
 
 	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/handler"
 	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/middleware"
@@ -17,17 +20,6 @@ import (
 
 // @title           Category API
 // @version         1.0
-// @description     This is a sample server for managing categories.
-// @termsOfService  http://swagger.io/terms/
-
-// @contact.name   API Support
-// @contact.url    http://www.swagger.io/support
-// @contact.email  support@swagger.io
-
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host      localhost:8080
 // @BasePath  /
 
 func main() {
@@ -46,8 +38,25 @@ func main() {
 	// Setup Router
 	r := gin.Default()
 
-	// Add Rate Limit Middleware (e.g., 10 rps)
+	// Rate Limit
 	r.Use(middleware.RateLimitMiddleware(10))
+
+	// Health Check
+	startTime := time.Now()
+	healthHandler := handler.NewHealthHandler(startTime)
+	r.GET("/health", healthHandler.HealthCheck)
+
+	// Root Endpoint - Welcome & Redirect info
+	r.Static("/static", "./web")
+	r.GET("/", func(c *gin.Context) {
+		c.File("./web/index.html")
+	})
+
+	// Swagger - Redirect /swagger to /swagger/index.html automatically
+	r.GET("/swagger", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
+	})
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Routes
 	c := r.Group("/categories")
@@ -59,8 +68,17 @@ func main() {
 		c.DELETE("/:id", categoryHandler.DeleteCategory)
 	}
 
-	// Swagger
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// Redirect 404
+	r.NoRoute(func(c *gin.Context) {
+		path := c.Request.URL.Path
+		// If path starts with /swagger/ but is not a file (no extension), redirect to index
+		if strings.HasPrefix(path, "/swagger/") && !strings.Contains(path, ".") {
+			c.Redirect(http.StatusFound, "/swagger/index.html")
+		} else {
+			// All other 404s go to root
+			c.Redirect(http.StatusFound, "/")
+		}
+	})
 
 	// Start server
 	log.Println("Server running on port 8080")
