@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"os"
 
 	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
 	"github.com/glebarez/sqlite"
@@ -21,10 +22,16 @@ func Connect() {
 	}
 
 	// Auto Migrate
-	err = DB.AutoMigrate(&entity.Category{})
+	err = DB.AutoMigrate(&entity.Category{}, &entity.Product{})
 	if err != nil {
 		log.Fatal("Failed to migrate database: ", err)
 	}
 
 	log.Println("Database connected and migrated successfully (SQLite)")
+
+	// Seed sample data (optional, controlled by environment variable)
+	// Set SEED_DATA=true to enable seeding
+	if os.Getenv("SEED_DATA") == "true" {
+		SeedData()
+	}
 }
