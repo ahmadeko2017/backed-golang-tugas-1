@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/repository"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/repository"
 )
 
 type CategoryService interface {

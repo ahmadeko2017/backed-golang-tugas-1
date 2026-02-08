@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
-	"github.com/ahmadeko2017/backed-golang-tugas-1/pkg/config"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/pkg/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -20,7 +20,12 @@ func Connect() {
 	}
 
 	var err error
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: true, // Disable prepared statements to avoid conflicts with Supabase PgBouncer
+	}), &gorm.Config{
+		PrepareStmt: false,
+	})
 	if err != nil {
 		log.Fatal("Failed to connect to database (Postgres): ", err)
 	}
@@ -54,7 +59,7 @@ func Connect() {
 
 	if needsMigration {
 		// Auto Migrate
-		err = DB.AutoMigrate(&entity.Category{}, &entity.Product{})
+		err = DB.AutoMigrate(&entity.Category{}, &entity.Product{}, &entity.Transaction{}, &entity.TransactionDetail{})
 		if err != nil {
 			log.Fatal("Failed to migrate database: ", err)
 		}

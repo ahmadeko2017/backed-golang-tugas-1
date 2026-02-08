@@ -1,14 +1,15 @@
 package repository
 
 import (
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
 	"gorm.io/gorm"
 )
 
 type ProductRepository interface {
 	Create(product *entity.Product) error
-	FindAll() ([]entity.Product, error)
+	FindAll(name string) ([]entity.Product, error)
 	FindByID(id uint) (entity.Product, error)
+	FindByIDWithLock(tx *gorm.DB, id uint) (entity.Product, error)
 	Update(product *entity.Product) error
 	Delete(id uint) error
 }
@@ -25,10 +26,15 @@ func (r *productRepository) Create(product *entity.Product) error {
 	return r.db.Create(product).Error
 }
 
-func (r *productRepository) FindAll() ([]entity.Product, error) {
+func (r *productRepository) FindAll(name string) ([]entity.Product, error) {
 	var products []entity.Product
-	// Preload Category to include category details in response
-	err := r.db.Preload("Category").Find(&products).Error
+	query := r.db.Preload("Category")
+
+	if name != "" {
+		query = query.Where("name ILIKE ?", "%"+name+"%")
+	}
+
+	err := query.Find(&products).Error
 	return products, err
 }
 
@@ -36,6 +42,14 @@ func (r *productRepository) FindByID(id uint) (entity.Product, error) {
 	var product entity.Product
 	err := r.db.Preload("Category").First(&product, id).Error
 	return product, err
+}
+
+func (r *productRepository) FindByIDWithLock(tx *gorm.DB, id uint) (entity.Product, error) {
+	var product entity.Product
+	if err := tx.Set("gorm:query_option", "FOR UPDATE").First(&product, id).Error; err != nil {
+		return product, err
+	}
+	return product, nil
 }
 
 func (r *productRepository) Update(product *entity.Product) error {

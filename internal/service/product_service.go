@@ -3,13 +3,13 @@ package service
 import (
 	"errors"
 
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/repository"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/repository"
 )
 
 type ProductService interface {
 	CreateProduct(product *entity.Product) error
-	GetAllProducts() ([]entity.Product, error)
+	GetAllProducts(name string) ([]entity.Product, error)
 	GetProductByID(id uint) (entity.Product, error)
 	UpdateProduct(id uint, product *entity.Product) error
 	DeleteProduct(id uint) error
@@ -36,8 +36,8 @@ func (s *productService) CreateProduct(product *entity.Product) error {
 	return s.repo.Create(product)
 }
 
-func (s *productService) GetAllProducts() ([]entity.Product, error) {
-	return s.repo.FindAll()
+func (s *productService) GetAllProducts(name string) ([]entity.Product, error) {
+	return s.repo.FindAll(name)
 }
 
 func (s *productService) GetProductByID(id uint) (entity.Product, error) {

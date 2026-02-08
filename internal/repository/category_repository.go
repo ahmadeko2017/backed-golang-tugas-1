@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
 	"gorm.io/gorm"
 )
 

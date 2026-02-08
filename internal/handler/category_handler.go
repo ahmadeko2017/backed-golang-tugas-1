@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/service"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/service"
 	"github.com/gin-gonic/gin"
 )
 

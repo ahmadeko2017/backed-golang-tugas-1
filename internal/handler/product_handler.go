@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/service"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -52,14 +52,16 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 
 // GetAllProducts godoc
 // @Summary Get all products
-// @Description Get a list of all products
+// @Description Get a list of all products, optionally filtered by name
 // @Tags products
 // @Produce json
+// @Param name query string false "Search by product name"
 // @Success 200 {array} entity.Product
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /products [get]
 func (h *ProductHandler) GetAllProducts(c *gin.Context) {
-	products, err := h.service.GetAllProducts()
+	name := c.Query("name")
+	products, err := h.service.GetAllProducts(name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -3,7 +3,7 @@ package database
 import (
 	"log"
 
-	"github.com/ahmadeko2017/backed-golang-tugas-1/internal/entity"
+	"github.com/ahmadeko2017/backed-golang-tugas/internal/entity"
 )
 
 // SeedData inserts sample categories and products into the database
