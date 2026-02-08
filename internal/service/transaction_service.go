@@ -92,6 +92,11 @@ func (s *transactionService) Checkout(items []CheckoutItem, total float64) (*ent
 			}
 		}
 
+		// Reload transaction with details and products to ensure response has full data
+		if err := tx.Preload("Details.Product").Preload("Details.Product.Category").First(txRecord, txRecord.ID).Error; err != nil {
+			return err
+		}
+
 		resultTx = txRecord
 		return nil
 	})
